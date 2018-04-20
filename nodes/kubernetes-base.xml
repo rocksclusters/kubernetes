@@ -36,7 +36,7 @@ net.bridge.bridge-nf-call-iptables = 1
 
 <file name="/tmp/10-kubeadm.conf" expr="sed 's/--cgroup-driver=[a-z]*/--cgroup-driver=cgroupfs/' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf"/>
 
-<file name="/etc/systemd/system/kubelet.service.d/10-kubeadm.conf" expr='cat /etmp/10-kubeadm.conf'/>
+<file name="/etc/systemd/system/kubelet.service.d/10-kubeadm.conf" expr='cat /tmp/10-kubeadm.conf'/>
 
 </post>
 

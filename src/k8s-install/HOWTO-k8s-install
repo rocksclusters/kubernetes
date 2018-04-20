@@ -1,0 +1,68 @@
+This is README for installing kubernetes on a Rocks cluster with the kubernetes roll.
+
+1. Frontend is the kubernetes master
+2. MUST be connected to the internet to download kubernetes pods.
+
+
+Step #1 - Install Kubernetes using kubeadm
+$kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$(rocks report host attr localhost attr=Kickstart_PrivateAddress)
+
+-- wait until all pods are in running state (except kube-dns)
+   $kubectl -n kube-system get pods
+   - kube-apiserver
+   - kube-scheduler
+   - kube-proxy
+   - kube-dns
+
+Step #2 -- Install calico network CNI
+$ kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
+
+-- wait until kube-dns us Running 
+   $kubectl -n kube-system get pods | grep dns | grep Running
+
+
+Step #3 -- Edit the daemonset configuration of Calico so that the it will use the local interface
+
+$ kubectl get daemonset -n kube-system calico-node -o yaml > /tmp/calico-node.yaml
+edit the yaml file, you will see lines that look like:
+        - name: IP
+          value: autodetect
+        - name: FELIX_HEALTHENABLED
+          value: "true"
+
+you need to add the IP_AUTODETECTION_METHOD so that the lines look like (assuming your frontend local ip is 10.1.1.1)
+        - name: IP
+          value: autodetect
+        - name: IP_AUTODETECTION_METHOD
+          value: can-reach=10.1.1.1
+        - name: FELIX_HEALTHENABLED
+          value: "true"
+
+Step 3.5 - apply your changes
+$ kubectl apply -f /tmp/calico-node.yaml
+output should look like
+daemonset.extensions "calico-node" configured
+
+Step 4.0 - once your compute nodes are UP you can add them to the kubernetes cluster
+$ rocks run host collate=yes "$(kubeadm token create --print-join-command)"
+
+
+===== Finishing up ====
+When 4.0 is complete you can check your kubernetes cluster state
+$ kubectl get nodes
+
+You can also start a sample container
+$ kubectl create -f https://k8s.io/docs/tasks/debug-application-cluster/shell-demo.yaml
+
+==== Verify that it is really working === 
+get a bash shell inside the container and then run apt-get update
+$ kubectl exec -it shell-demo /bin/bash
+root@shell-demo:/# apt-get update
+Hit:1 http://security.debian.org stretch/updates InRelease
+Ign:2 http://cdn-fastly.deb.debian.org/debian stretch InRelease           
+Hit:3 http://cdn-fastly.deb.debian.org/debian stretch-updates InRelease
+Hit:4 http://cdn-fastly.deb.debian.org/debian stretch Release
+Reading package lists... Done
+root@shell-demo:/# 
+
+

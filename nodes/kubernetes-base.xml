@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+
+	<description>
+	Kubernetes on all nodes	
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2017 The Regents of the University of California.
+	All rights reserved. Rocks(r) v6.2/v7.0 www.rocksclusters.org
+	
+	</copyright>
+
+	<changelog>
+	$Log$
+	</changelog>
+
+	<package>calicoctl</package>
+	<package>device-mapper-persistent-data</package>
+	<package>docker-ce</package>
+	<package>kubeadm</package>
+	<package>kubelet</package>
+	<package>kube-profile</package>
+	<package>lvm2</package>
+<post>
+/usr/bin/systemctl enable docker
+/usr/bin/systemctl enable kubelet
+<file name="/etc/sysctl.d/k8s.conf">
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+</file>
+
+<!--using docker-ce, so change the cgroup-driver of kubeadm to match -->
+
+<file name="/tmp/10-kubeadm.conf" expr="sed 's/--cgroup-driver=[a-z]*/--cgroup-driver=cgroupfs/' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf"/>
+
+<file name="/etc/systemd/system/kubelet.service.d/10-kubeadm.conf" expr='cat /etmp/10-kubeadm.conf'/>
+
+</post>
+
+</kickstart>

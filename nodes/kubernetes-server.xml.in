@@ -1,0 +1,97 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+
+	<description>
+	Configuration of Kubernetes/Docker on Rocks Frontend	
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2017 The Regents of the University of California.
+	All rights reserved. Rocks(r) v6.2/v7.0 www.rocksclusters.org
+	
+	</copyright>
+
+	<changelog>
+	$Log$
+	</changelog>
+
+<post>
+### Bash defaults populated by rolldef2bash.py
+%DEFAULTS%
+###
+### Make certain attrs have been added to DB 
+baseDir=&DOCKER_BASE;
+if [ ${#baseDir} == 0 ]; then 
+	/opt/rocks/bin/rocks add attr DOCKER_BASE $DOCKER_BASE_ROLLDEFAULT
+	baseDir=$DOCKER_BASE_ROLLDEFAULT
+fi
+
+certDir=&DOCKER_CERT_DIR;
+if [ ${#certDir} == 0 ]; then 
+	/opt/rocks/bin/rocks add attr DOCKER_CERT_DIR $DOCKER_CERT_DIR_ROLLDEFAULT
+	certDir=$DOCKER_CERT_DIR_ROLLDEFAULT
+fi
+
+regDir=&DOCKER_REGISTRY_DIR;
+if [ ${#regDir} == 0 ]; then 
+	/opt/rocks/bin/rocks add attr DOCKER_REGISTRY_DIR $DOCKER_REGISTRY_DIR_ROLLDEFAULT
+	regDir=$DOCKER_REGISTRY_DIR_ROLLDEFAULT
+fi
+
+registryPort=&DOCKER_REGISTRY_PORT;
+if [ ${#registryPort} == 0 ]; then 
+	/opt/rocks/bin/rocks add attr DOCKER_REGISTRY_PORT $DOCKER_REGISTRY_PORT_ROLLDEFAULT
+	registryPort=$DOCKER_REGISTRY_PORT_ROLLDEFAULT
+fi
+
+regDir=$baseDir/$regDir
+certDir=$baseDir/$certDir
+cert=$certDir/docker-registry.crt
+csr=$certDir/docker-registry.csr
+key=$certDir/docker-registry.key
+ca=/etc/security/ca/ca.cfg
+caDir=$(/usr/bin/dirname $ca)
+
+if [ ! -d $certDir ]; then mkdir -p $certDir; fi 
+if [ ! -d $regDir ]; then mkdir -p $regDir; fi 
+
+### Create the locally-signed certificates
+if [ ! -f $cert ]; then
+	/usr/bin/openssl req -new -nodes -config /etc/security/ca/ca.cfg \
+        -keyout $key \
+        -subj "\
+/C=&Info_CertificateCountry;/\
+ST=&Info_CertificateState;/\
+L=&Info_CertificateLocality;/\
+O=&Info_CertificateOrganization;/\
+OU=&Info_ClusterName;/\
+CN=&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;" \
+        &gt; $csr ; \
+	chmod 0400 $key 
+
+	pushd $(/usr/bin/dirname $ca)
+	/usr/bin/openssl x509 -req -days 2000 \
+        	-CA ca.crt -CAkey ca.key -CAserial ca.serial \
+        	&lt; $csr \
+        	&gt; $cert ; \
+	chmod 0444 $cert 
+	popd
+fi
+
+
+### copy the CA crt so that we can trust the registry with
+### the locally-signed certificate
+
+dockerRegCerts=/etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:$registryPort
+cert=ca.crt
+if [ ! -d $dockerRegCerts ]; then
+	mkdir -p $dockerRegCerts;
+fi
+if [ ! -f $dockerRegCerts/$cert ]; then
+	/bin/cp -p $caDir/$cert $dockerRegCerts/$cert
+fi
+
+</post>
+</kickstart>

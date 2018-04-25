@@ -1,0 +1,56 @@
+[
+    {
+        "required": true, 
+        "value": "/export/docker", 
+        "initialize": "",
+        "varname": "DOCKER_BASE", 
+        "infoHelp": "Base directory for docker registry. This is usually a location that is not re-formatted during reinstallation", 
+        "param": "Docker Registry Base Directory", 
+        "validate": null,
+	"derived": false,
+	"color": "light blue", 
+	"colorlabel": "light blue", 
+        "display": true
+    }, 
+    {
+        "required": true, 
+        "value": "certs", 
+        "initialize": "",
+        "varname": "DOCKER_CERT_DIR", 
+        "infoHelp": "certs subdirectory for docker registry", 
+        "param": "Docker certs subdirectory", 
+        "validate": null,
+	"derived": false,
+	"color": "light blue", 
+	"colorlabel": "light blue", 
+        "display": false
+    }, 
+
+    {
+        "required": true, 
+        "value": "registry", 
+        "initialize": "",
+        "varname": "DOCKER_REGISTRY_DIR", 
+        "infoHelp": "registry subdirectory for docker registry", 
+        "param": "Docker registry subdirectory", 
+        "validate": null,
+	"derived": false,
+	"color": "light blue", 
+	"colorlabel": "light blue", 
+        "display": false
+    }, 
+
+    {
+        "required": true, 
+        "value": "5443", 
+        "initialize": "",
+        "varname": "DOCKER_REGISTRY_PORT", 
+        "infoHelp": "Port used for cluster local docker registry service", 
+        "param": "Docker Registry Port for local registry service", 
+        "validate": null,
+	"derived": false,
+	"color": "light blue", 
+	"colorlabel": "light blue", 
+        "display": true
+    } 
+]

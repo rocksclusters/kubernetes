@@ -9,6 +9,7 @@ runcmd="docker run -d \
   -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
   -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt \
   -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key \
+  -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
   -p @DOCKER_REGISTRY_PORT@:443 \
   registry:2"
 BASE=$($ROCKS report host attr localhost attr=DOCKER_BASE)

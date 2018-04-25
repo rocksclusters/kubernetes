@@ -1,0 +1,16 @@
+[Unit]
+Description=Run a local Docker registry. 
+Requires=foundation-mysql.service
+Requires=docker.service
+After=foundation-mysql.service
+After=docker.service
+Wants=foundation-mysql.service
+Wants=docker.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/opt/rocks/sbin/gen-docker-local-registry
+ExecStart=/opt/rocks/sbin/docker-local-registry
+
+[Install]
+WantedBy=multi-user.target

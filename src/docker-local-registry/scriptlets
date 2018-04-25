@@ -1,0 +1,4 @@
+%post
+# enable the services 
+/usr/bin/systemctl enable docker-local-registry 
+

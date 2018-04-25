@@ -17,8 +17,16 @@
 	$Log$
 	</changelog>
 
-	<package>k8s-install</package>
-	<package>k8s-repo</package>
-	<package>kubectl</package>
+<post>
+
+dockerRegCerts=/etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:&DOCKER_REGISTRY_PORT;
+if [ ! -d $dockerRegCerts ]; then
+	mkdir -p $dockerRegCerts
+fi
+if [ ! -f $dockerRegCerts/ca.crt ]; then
+	<file name="$dockerRegCerts/ca.crt" perms="644">
+	<eval>cat /etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:&DOCKER_REGISTRY_PORT;/ca.crt</eval>
+	</file>
+fi
 
 </kickstart>

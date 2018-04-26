@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+
+<graph>
+
+	<description>
+
+	The kubernetes Roll
+
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2017 The Regents of the University of California.
+	All rights reserved. Rocks(r) v6.2/v7.0 www.rocksclusters.org
+	
+	</copyright>
+
+	<!-- add edges here -->
+	<edge from="server" to="kubernetes-server"/>
+	<edge from="client" to="kubernetes-client"/>
+	<edge from="base" to="kubernetes-base"/>
+
+</graph>

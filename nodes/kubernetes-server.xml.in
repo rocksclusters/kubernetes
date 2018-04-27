@@ -17,7 +17,6 @@
 	$Log$
 	</changelog>
 
-	<package>docker-local-registry</package>
 <post>
 ### Bash defaults populated by rolldef2bash.py
 %DEFAULTS%
@@ -93,5 +92,6 @@ fi
 if [ ! -f $dockerRegCerts/$cert ]; then
 	/bin/cp -p $caDir/$cert $dockerRegCerts/$cert
 fi
+
 </post>
 </kickstart>

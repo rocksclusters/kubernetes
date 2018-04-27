@@ -11,8 +11,6 @@ Wants=docker.service
 Type=oneshot
 ExecStartPre=/opt/rocks/sbin/gen-docker-local-registry
 ExecStart=/opt/rocks/sbin/docker-local-registry
-ExecStop=/usr/bin/docker stop registry
-ExecStop=/usr/bin/docker rm registry
 
 [Install]
 WantedBy=multi-user.target

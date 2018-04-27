@@ -19,14 +19,22 @@
 
 <post>
 
-dockerRegCerts=/etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:&DOCKER_REGISTRY_PORT;
+%DEFAULTS%
+
+registryPort=&DOCKER_REGISTRY_PORT;
+if [ ${#registryPort} == 0 ]; then 
+        registryPort=$DOCKER_REGISTRY_PORT_ROLLDEFAULT
+fi
+
+dockerRegCerts=/etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:$registryPort
 if [ ! -d $dockerRegCerts ]; then
 	mkdir -p $dockerRegCerts
 fi
 if [ ! -f $dockerRegCerts/ca.crt ]; then
 	<file name="$dockerRegCerts/ca.crt" perms="644">
-	<eval>cat /etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:&DOCKER_REGISTRY_PORT;/ca.crt</eval>
+	<eval>cat /etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:$registryPort/ca.crt</eval>
 	</file>
 fi
+</post>
 
 </kickstart>

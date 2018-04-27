@@ -1,0 +1,33 @@
+# build directory
+BUILD/
+RPMS/
+SOURCES/
+SPECS/
+disk1/
+kubernetes*.iso
+.rpmmacros
+nodes/kubernetes-server.xml
+nodes/kubernetes-client.xml
+*.pyc
+_os
+_arch
+_distribution
+
+# ignore version.mk
+rocks-version.mk
+rocks-version-common.mk
+
+# ignore python.mk
+python.mk
+
+# ignore Rules files
+Rules-*.mk
+Rules.mk
+Rolls.mk
+roll*.spec*
+roll-*.xml
+roll-*.mk
+
+# ignore source binarires
+src/*/*.gz
+

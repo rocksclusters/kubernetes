@@ -71,9 +71,11 @@ preroll::
 	done
 
 clean::
-	- /bin/rm -f _arch
-	- /bin/rm -f bootstrap.py 
+	- /bin/rm -f _arch bootstrap.py 
+
+cvsclean:: clean
 	for i in `ls nodes/*.xml.in`; do \
 	    export o=`echo $$i | sed 's/\.in//'`; \
 	    rm -rf  $$o; \
 	done
+	rm -rf RPMS SRPMS

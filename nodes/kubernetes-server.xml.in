@@ -17,6 +17,7 @@
 	$Log$
 	</changelog>
 
+	<package>docker-local-registry</package>
 <post>
 ### Bash defaults populated by rolldef2bash.py
 %DEFAULTS%

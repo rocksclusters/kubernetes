@@ -6,10 +6,11 @@ Kubernetes Support  Rocks 7
 1. [Building a roll](#buildroll)
 2. [Install a roll on a life server](#liveinstall)
 3. [Configure Kubernetes](#config)
-    1. [Install Kubernetes using kubeadm](#step1)
-    2. [Install calico network CNI](#step2)
-    3. [Update Calico configuration](#step3)
-    4. [Add compute nodes to kubernetes cluster](#step4)
+    1. [Step1: Install Kubernetes using kubeadm](#step1)
+    2. [Step2: Install calico network CNI](#step2)
+    3. [Step3: Update Calico configuration](#step3)
+    4. [Step4: Add compute nodes to kubernetes cluster](#step4)
+4. [Start a demo container](#sample)
 
 ### Building a roll <a name="buildroll"></a>
 Check out roll source from github
@@ -56,7 +57,7 @@ This secition explains configurung kubernetes after the roll is installed.
 2. MUST be connected to the internet to download kubernetes pods.
 
 
-#### Install Kubernetes using kubeadm <a name="step1"></a>
+#### Step1: Install Kubernetes using kubeadm <a name="step1"></a>
 ```bash
 kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$(rocks report host attr localhost attr=Kickstart_PrivateAddress)
 ```
@@ -64,14 +65,14 @@ Wait until all pods are in running state (except kube-dns). To verify state run 
 ```bash
 kubectl -n kube-system get pods
 NAMESPACE     NAME                                                  READY     STATUS    RESTARTS   AGE
-kube-system   etcd-pc-171.calit2.optiputer.net                      1/1       Running   0          26s
-kube-system   kube-apiserver-pc-171.calit2.optiputer.net            1/1       Running   0          45s
-kube-system   kube-controller-manager-pc-171.calit2.optiputer.net   1/1       Running   0          43s
+kube-system   etcd-pc-171.co.net                      1/1       Running   0          26s
+kube-system   kube-apiserver-pc-171.co.net            1/1       Running   0          45s
+kube-system   kube-controller-manager-pc-171.co.net   1/1       Running   0          43s
 kube-system   kube-dns-86f4d74b45-lk89c                             0/3       Pending   0          1m
 kube-system   kube-proxy-txj5v                                      1/1       Running   0          1m
-kube-system   kube-scheduler-pc-171.calit2.optiputer.net            1/1       Running   0          42s
+kube-system   kube-scheduler-pc-171.co.net            1/1       Running   0          42s
 ```
-#### Install  calico network CNI <a name="step2"></a>
+#### Step2: Install  calico network CNI <a name="step2"></a>
 ```bash
 kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
 ```
@@ -79,7 +80,7 @@ Wait until kube-dns us Running
 ```bash
 kubectl -n kube-system get pods | grep dns | grep Running
 ```
-#### Update Calico configuration <a name="step3"></a>
+#### Step3: Update Calico configuration <a name="step3"></a>
 Edit the daemonset configuration of Calico so that the it will use the local interface.
 First, get the current configuration adn save in a file:
 ```bash
@@ -113,7 +114,7 @@ The output shoudl look like:
 daemonset.extensions "calico-node" configured
 ```
 
-#### [Add compute nodes to kubernetes cluster <a name="step4"></a>
+#### Step4: Add compute nodes to kubernetes cluster <a name="step4"></a>
 Add compute nodes to the kubernetes cluster:
 ```bash
 rocks run host compute "swapoff -a"
@@ -128,6 +129,26 @@ The output will be similar to:
 ``` text
 NAME                          STATUS    ROLES     AGE       VERSION
 compute-0-0.local             Ready     <none>    1m        v1.10.2
-pc-171.calit2.optiputer.net   Ready     master    9m        v1.10.2
+pc-171.co.net   Ready     master    9m        v1.10.2
+```
+
+### Start a demo container <a name="sample"></a>
+Start a simple demo container:
+```bash
+kubectl create -f https://k8s.io/docs/tasks/debug-application-cluster/shell-demo.yaml
+```
+Get a bash shel insdie container :
+```bash
+kubectl exec -it shell-demo /bin/bash
+```
+Once on a container, run a few ocmmands to install extra packages, test network:
+
+```bash
+apt-get update
+apt-get install iproute2
+apt-get install dnsutils
+apt-get install iputils-ping
+ping 8.8.8.8
+ip addr show
 ```
 

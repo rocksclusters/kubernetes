@@ -4,7 +4,7 @@ Kubernetes Support  Rocks 7
 ## Table of contents
 
 1. [Building a roll](#buildroll)
-2. [Install a roll on a life server](#liveinstall)
+2. [Install a roll on a live server](#liveinstall)
 3. [Configure Kubernetes](#config)
     1. [Step1: Install Kubernetes using kubeadm](#step1)
     2. [Step2: Install calico network CNI](#step2)
@@ -24,9 +24,9 @@ To build a roll:
 make roll
 ```
 The successfull build results in creating kubernetes-VERSION-0.x86_64.disk1.iso
-wehre VERSION is a current versoin of kubernetes source.
+wehre VERSION is a current version of kubernetes source.
 
-### Install a roll on a life server <a name="liveinstall"></a>
+### Install a roll on a live server <a name="liveinstall"></a>
 
 ```bash
 rocks add roll  kubernetes-VERSION-0.x86_64.disk1.iso
@@ -51,7 +51,7 @@ rocks run host compute "/share/apps/add-k-compute.sh"
 ```
 
 ### Configure Kubernetes <a name="config"></a>
-This secition explains configurung kubernetes after the roll is installed. 
+This section explains configuring kubernetes after the roll is installed. 
 
 1. Frontend is the kubernetes master
 2. MUST be connected to the internet to download kubernetes pods.
@@ -82,12 +82,12 @@ kubectl -n kube-system get pods | grep dns | grep Running
 ```
 #### Step3: Update Calico configuration <a name="step3"></a>
 Edit the daemonset configuration of Calico so that the it will use the local interface.
-First, get the current configuration adn save in a file:
+First, get the current configuration and save in a file:
 ```bash
 kubectl get daemonset -n kube-system calico-node -o yaml > /tmp/calico-node.yaml
 ```
 
-Edit the resultgin yaml file, and find lines that look like:
+Edit the resulting yaml file, and find lines that look like:
 ```text
         - name: IP
           value: autodetect
@@ -95,7 +95,8 @@ Edit the resultgin yaml file, and find lines that look like:
           value: "true"
 ```
 
-Add the IP_AUTODETECTION_METHOD so that the lines look like (assuming your frontend local ip is 10.1.1.1):
+Add the IP_AUTODETECTION_METHOD so that the lines look like (assuming your frontend local ip is 10.1.1.1). (Please note that
+consistent indentation is important):
 ```text
         - name: IP
           value: autodetect
@@ -109,7 +110,7 @@ Apply your changes:
 kubectl apply -f /tmp/calico-node.yaml
 ```
 
-The output shoudl look like:
+The output should look like:
 ```text
 daemonset.extensions "calico-node" configured
 ```
@@ -121,7 +122,7 @@ rocks run host compute "swapoff -a"
 rocks run host compute "$(kubeadm token create --print-join-command)"
 ```
 
-Check what nodes are running:
+Check which nodes are running:
 ```bash
 kubectl get nodes
 ```
@@ -137,11 +138,11 @@ Start a simple demo container:
 ```bash
 kubectl create -f https://k8s.io/docs/tasks/debug-application-cluster/shell-demo.yaml
 ```
-Get a bash shel insdie container :
-```bash
+Get a bash shell inside the container :
+```bash 
 kubectl exec -it shell-demo /bin/bash
 ```
-Once on a container, run a few ocmmands to install extra packages, test network:
+Once on a container, run a few commands to install extra packages, test network and the like:
 
 ```bash
 apt-get update

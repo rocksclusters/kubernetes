@@ -64,12 +64,12 @@ kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$(r
 Wait until all pods are in running state (except kube-dns). To verify state run a command:
 ```bash
 kubectl -n kube-system get pods
-NAMESPACE     NAME                                                  READY     STATUS    RESTARTS   AGE
+NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE
 kube-system   etcd-pc-171.co.net                      1/1       Running   0          26s
 kube-system   kube-apiserver-pc-171.co.net            1/1       Running   0          45s
 kube-system   kube-controller-manager-pc-171.co.net   1/1       Running   0          43s
-kube-system   kube-dns-86f4d74b45-lk89c                             0/3       Pending   0          1m
-kube-system   kube-proxy-txj5v                                      1/1       Running   0          1m
+kube-system   kube-dns-86f4d74b45-lk89c               0/3       Pending   0          1m
+kube-system   kube-proxy-txj5v                        1/1       Running   0          1m
 kube-system   kube-scheduler-pc-171.co.net            1/1       Running   0          42s
 ```
 #### Step2: Install  calico network CNI <a name="step2"></a>
@@ -130,7 +130,7 @@ The output will be similar to:
 ``` text
 NAME                          STATUS    ROLES     AGE       VERSION
 compute-0-0.local             Ready     <none>    1m        v1.10.2
-pc-171.co.net   Ready     master    9m        v1.10.2
+pc-171.co.net                 Ready     master    9m        v1.10.2
 ```
 
 ### Start a demo container <a name="sample"></a>

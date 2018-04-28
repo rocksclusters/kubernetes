@@ -24,7 +24,7 @@ To build a roll:
 make roll
 ```
 The successfull build results in creating kubernetes-VERSION-0.x86_64.disk1.iso
-wehre VERSION is a current version of kubernetes source.
+where VERSION is a current version of kubernetes source.
 
 ### Install a roll on a live server <a name="liveinstall"></a>
 

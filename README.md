@@ -33,7 +33,7 @@ rocks add roll  kubernetes-VERSION-0.x86_64.disk1.iso
 rocks enable roll kubernetes
 (cd /export/rocks/install; rocks create distro)
 ```
-Create scipt with instructions to add roll to a frontend and run it:
+Create a script with instructions to add roll to a frontend and run it:
 ```bash
 rocks run roll kubernetes > add-k.sh
 bash  add-k.sh

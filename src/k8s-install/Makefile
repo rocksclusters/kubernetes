@@ -61,15 +61,22 @@
 REDHAT.ROOT     = $(CURDIR)/../../
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-SCRIPTS = HOWTO-k8s-install 
+SCRIPTS = configure_kubernetes.py
+DOC = HOWTO-k8s-install 
 build::
 
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)/doc
+	(								\
+		for i in $(DOC); do 				\
+			$(INSTALL) -m 0644 $$i $(ROOT)/$(PKGROOT)/doc ;		\
+		done								\
+	)
+	mkdir -p $(ROOT)/$(PKGROOT)/sbin
 	(								\
 		for i in $(SCRIPTS); do 				\
-			$(INSTALL) -m 0644 $$i $(ROOT)/$(PKGROOT) ;		\
+			$(INSTALL) -m 0644 $$i $(ROOT)/$(PKGROOT)/sbin ;		\
 		done								\
 	)
 

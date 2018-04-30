@@ -37,6 +37,7 @@ Create a script with instructions to add roll to a frontend and run it:
 ```bash
 rocks run roll kubernetes > add-k.sh
 bash  add-k.sh
+. /etc/profile.d/kube-profile.sh
 ```
 
 To install kubernetes on compute ndoes  create a scirpt with instructions

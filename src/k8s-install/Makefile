@@ -76,7 +76,7 @@ install::
 	mkdir -p $(ROOT)/$(PKGROOT)/sbin
 	(								\
 		for i in $(SCRIPTS); do 				\
-			$(INSTALL) -m 0644 $$i $(ROOT)/$(PKGROOT)/sbin ;		\
+			$(INSTALL) -m 0744 $$i $(ROOT)/$(PKGROOT)/sbin ;		\
 		done								\
 	)
 

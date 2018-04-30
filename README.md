@@ -37,6 +37,7 @@ Create a script with instructions to add roll to a frontend and run it:
 ```bash
 rocks run roll kubernetes > add-k.sh
 bash  add-k.sh
+. /etc/profile.d/kube-profile.sh
 ```
 
 To install kubernetes on compute ndoes  create a scirpt with instructions
@@ -47,7 +48,7 @@ rocks run roll kubernetes host=compute-0-0 > /share/apps/add-k-compute.sh
 ```
 Run the script on all compute nodes (or a subset):
 ```bash
-rocks run host compute "/share/apps/add-k-compute.sh"
+rocks run host compute "bash /share/apps/add-k-compute.sh"
 ```
 
 ### Configure Kubernetes <a name="config"></a>

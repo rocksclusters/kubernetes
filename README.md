@@ -47,7 +47,7 @@ rocks run roll kubernetes host=compute-0-0 > /share/apps/add-k-compute.sh
 ```
 Run the script on all compute nodes (or a subset):
 ```bash
-rocks run host compute "/share/apps/add-k-compute.sh"
+rocks run host compute "bash /share/apps/add-k-compute.sh"
 ```
 
 ### Configure Kubernetes <a name="config"></a>

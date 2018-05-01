@@ -107,6 +107,8 @@ join_cmd = getOutput("kubeadm token create --print-join-command", "Getting uniqu
 runCommand('rocks run host compute "%s"' % join_cmd, "Configuring container nodes")
 computes = getOutput("rocks list host | grep Compute | cut -f 1 -d:", "Getting Rocks compute node names")
 waitTillState("node", "kubectl get nodes", "^%s\S+\s+(\S+)", "Ready", *computes.split("\n"))
+
+# deploy demo and print status
 runCommand("kubectl create -f %s" % SHELL_URL, "Deploying shell-demo example container")
 waitTillPodRunning(None, "shell-demo")
 printDescription("Kubernetes is ready! (took %i secs)" % (time.time() - starttime))

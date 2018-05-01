@@ -18,6 +18,9 @@
 	</changelog>
 
 	<package>docker-local-registry</package>
+	<package>k8s-install</package>
+	<package>k8s-repo</package>
+	<package>docker-ce-repo</package>
 <post>
 ### Bash defaults populated by rolldef2bash.py
 %DEFAULTS%

@@ -15,6 +15,7 @@
 	</copyright>
 
 	<!-- add edges here -->
+	<order head="swapfile" tail="kubernetes-base"/>
 	<edge from="server" to="kubernetes-server"/>
 	<edge from="client" to="kubernetes-client"/>
 	<edge from="base" to="kubernetes-base"/>

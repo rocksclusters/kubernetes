@@ -39,7 +39,8 @@ net.bridge.bridge-nf-call-iptables = 1
 <file name="/etc/systemd/system/kubelet.service.d/10-kubeadm.conf" expr='cat /tmp/10-kubeadm.conf'/>
 
 <!-- disable swap partitions from fstab -->
-<file name="/etc/fstab" expr="sed -i '/swap/s/^/#KUBERNETES-ROLL#' /etc/fstab"/>
+/usr/bin/sed '/swap/s/^/#KUBERNETES-ROLL#/' /etc/fstab &gt; /tmp/fstab.kub
+<file name="/etc/fstab" expr="cat /tmp/fstab.kub"/>
 
 </post>
 

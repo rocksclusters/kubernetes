@@ -25,7 +25,7 @@ if [ ! -d $dockerRegCerts ]; then
 fi
 if [ ! -f $dockerRegCerts/ca.crt ]; then
 	<file name="$dockerRegCerts/ca.crt" perms="644">
-	<eval>cat /etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:&DOCKER_REGISTRY_PORT;/ca.crt</eval>
+<eval>cat /etc/docker/certs.d/&Kickstart_PrivateHostname;.&Kickstart_PrivateDNSDomain;:&DOCKER_REGISTRY_PORT;/ca.crt</eval>
 	</file>
 fi
 </post>

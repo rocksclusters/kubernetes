@@ -139,7 +139,7 @@ The kubernetes installation requires your physical cluster to be up and
 running.  We have developed a single python script that will install 
 kubernetes on your master node and all compute appliances.  This assumes 
 that your roll is installed. If doing a live install, please follow all steps
-in the [live install[(#liveinstall) section.
+in the [live install](#liveinstall) section.
  
 This section explains configuring kubernetes after the roll is installed. 
 

@@ -5,12 +5,13 @@ Kubernetes Support  Rocks 7
 
 1. [Building a roll](#buildroll)
 2. [Install a roll on a live server](#liveinstall)
-3. [Configure Kubernetes](#config)
+3. [Configure Kubernetes - Multistep](#config)
     1. [Step1: Install Kubernetes using kubeadm](#step1)
     2. [Step2: Install calico network CNI](#step2)
     3. [Step3: Update Calico configuration](#step3)
     4. [Step4: Add compute nodes to kubernetes cluster](#step4)
-4. [Start a demo container](#sample)
+4. [Configure Kubernetes in One Step - Single Script](#config2)
+5. [Start a demo container](#sample)
 
 ### Building a roll <a name="buildroll"></a>
 Check out roll source from github
@@ -40,7 +41,7 @@ bash  add-k.sh
 . /etc/profile.d/kube-profile.sh
 ```
 
-To install kubernetes on compute ndoes  create a scirpt with instructions
+To install kubernetes on compute nodes  create a scirpt with instructions
 in a directory NFS-mounted on all nodes:	
 ```bash
 rocks run roll kubernetes host=compute-0-0 > /share/apps/add-k-compute.sh
@@ -133,6 +134,29 @@ NAME                          STATUS    ROLES     AGE       VERSION
 compute-0-0.local             Ready     <none>    1m        v1.10.2
 pc-171.co.net                 Ready     master    9m        v1.10.2
 ```
+### Configure Kubernetes in One Step<a name="config2"></a>
+The kubernetes installation requires your physical cluster to be up and
+running.  We have developed a single python script that will install 
+kubernetes on your master node and all compute appliances.  This assumes 
+that your roll is installed. If doing a live install, please follow all steps
+in the [live install[(#liveinstall) section.
+ 
+This section explains configuring kubernetes after the roll is installed. 
+
+1. Frontend is the kubernetes master
+2. MUST be connected to the internet to download kubernetes pods.
+3. Compute nodes must be installed with kubelet installed
+4. Swap must be off on all nodes (kubernetes requirement)
+
+
+Single step (as root on your frontend):
+```
+/opt/rocks/sbin/configure_kubernetes.py
+```
+That script will take several minutes to run, so please be patient.
+It's a good idea to capture its output to a log file.
+It will start a ```shell-demo``` pod as in the [sample](#sample) below. 
+
 
 ### Start a demo container <a name="sample"></a>
 Start a simple demo container:

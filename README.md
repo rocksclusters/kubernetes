@@ -63,24 +63,27 @@ This section explains configuring kubernetes after the roll is installed.
 ```bash
 kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$(rocks report host attr localhost attr=Kickstart_PrivateAddress)
 ```
-Wait until all pods are in running state (except kube-dns). To verify state run a command:
+Wait until all pods are in running state (except coredns and etcd). To verify state run a command:
 ```bash
 kubectl -n kube-system get pods
-NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE
-kube-system   etcd-pc-171.co.net                      1/1       Running   0          26s
-kube-system   kube-apiserver-pc-171.co.net            1/1       Running   0          45s
-kube-system   kube-controller-manager-pc-171.co.net   1/1       Running   0          43s
-kube-system   kube-dns-86f4d74b45-lk89c               0/3       Pending   0          1m
-kube-system   kube-proxy-txj5v                        1/1       Running   0          1m
-kube-system   kube-scheduler-pc-171.co.net            1/1       Running   0          42s
+[root@lima-vc-6 sbin]# kubectl -n kube-system get pods
+NAME                                                   READY     STATUS    RESTARTS   AGE
+coredns-78fcdf6894-2mr7z                               0/1       Pending   0          52s
+coredns-78fcdf6894-drx8s                               0/1       Pending   0          52s
+etcd-lima-vc-6.sdsc.optiputer.net                      0/1       Pending   0          10s
+kube-apiserver-lima-vc-6.sdsc.optiputer.net            1/1       Running   0          16s
+kube-controller-manager-lima-vc-6.sdsc.optiputer.net   1/1       Running   0          32s
+kube-proxy-jc8z7                                       1/1       Running   0          52s
+kube-scheduler-lima-vc-6.sdsc.optiputer.net            1/1       Running   0          32s
 ```
 #### Step2: Install  calico network CNI <a name="step2"></a>
 ```bash
 kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
 ```
-Wait until kube-dns us Running 
+Wait until coredns and etcd is Running 
 ```bash
 kubectl -n kube-system get pods | grep dns | grep Running
+kubectl -n kube-system get pods | grep etcd | grep Running
 ```
 #### Step3: Update Calico configuration <a name="step3"></a>
 Edit the daemonset configuration of Calico so that the it will use the local interface.
@@ -130,9 +133,9 @@ kubectl get nodes
 ```
 The output will be similar to:
 ``` text
-NAME                          STATUS    ROLES     AGE       VERSION
-compute-0-0.local             Ready     <none>    1m        v1.10.2
-pc-171.co.net                 Ready     master    9m        v1.10.2
+NAME                           STATUS    ROLES     AGE       VERSION
+compute-0-0.local              Ready     <none>    1m        v1.11.1
+lima-vc-6.sdsc.optiputer.net   Ready     master    3m        v1.11.1
 ```
 ### Configure Kubernetes in One Step<a name="config2"></a>
 The kubernetes installation requires your physical cluster to be up and

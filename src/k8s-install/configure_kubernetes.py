@@ -13,7 +13,7 @@ CALICO_TMP_YAML="/tmp/calico-node.yaml"
 CALICO_EXTRA = """
         - name: IP_AUTODETECTION_METHOD
           value: can-reach=10.1.1.1"""
-SHELL_URL="https://k8s.io/docs/tasks/debug-application-cluster/shell-demo.yaml"
+SHELL_URL="https://k8s.io/examples/application/shell-demo.yaml"
 
 
 def printDescription(desc):
@@ -91,18 +91,18 @@ runCommand("swapoff -a", "Turning of swap for Kubernetes")
 runCommand("systemctl daemon-reload", "Reloading systemctl files")
 runCommand("systemctl stop kubelet", "Stopping kubelet")
 runCommand("systemctl start docker", "Checking docker status and start if not running")
-runCommand("kubeadm reset", "Resetting kubernetes")
+runCommand("yes | kubeadm reset", "Resetting kubernetes")
 fe_private_ip = getOutput("rocks report host attr localhost attr=Kickstart_PrivateAddress", "Getting private IP of frontend")
 runCommand("kubeadm init --pod-network-cidr=%s --apiserver-advertise-address=%s" % (KUBE_CIDR, fe_private_ip), "Configuring kubernetes")
 waitTillPodRunning("kube-system", "kube-apiserver", "kube-scheduler", "kube-proxy")
 runCommand("kubectl apply -f %s" % CALICO_URL, "Configuring calico network for kubernetes")
-waitTillPodRunning("kube-system", "kube-dns")
+waitTillPodRunning("kube-system", "dns")
 fixCalicoYaml()
 
 # then configure k8 on compute nodes which will be become k8 nodes
 runCommand('rocks run host compute "swapoff -a"', "Turning swap off on kubernetes nodes")
 runCommand('rocks run host compute "systemctl start docker"', "Checking docker status on kubernetes  nodes and start if not running")
-runCommand('rocks run host compute "kubeadm reset"', "Resetting kubernetes")
+runCommand('rocks run host compute "yes | kubeadm reset"', "Resetting kubernetes")
 join_cmd = getOutput("kubeadm token create --print-join-command", "Getting unique token to allow to kubernetes  nodes join")
 runCommand('rocks run host compute "%s"' % join_cmd, "Configuring container nodes")
 computes = getOutput("rocks list host | grep Compute | cut -f 1 -d:", "Getting Rocks compute node names")
